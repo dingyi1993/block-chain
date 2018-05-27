@@ -10,17 +10,17 @@ const dyWallet = dyCoin.genNewWallet()
 // const cjbWallet = dyCoin.genNewWallet()
 const cjbWallet = dyCoin.genFakeWallet({ address: 'qwe', privateKey: 'asd' })
 const ohhAddress = `-----BEGIN PUBLIC KEY-----
-MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAM1iZnegECJBt50QpEh9zCEG/jIy6Vp8
-rkOlyWaNZJFEr6WyvBVfggdhLBIDQmtLIpkRflvlGItXhpWki5JrfuUCAwEAAQ==
+MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAOQ4nnIVHbO9UdmYJqBGrVx0GCGWObkr
+L4uxazERcM1lFsThopQqtMHUzVp4xJHic2gW7BIv8LIOr5kBbOxDNOsCAwEAAQ==
 -----END PUBLIC KEY-----`
 const ohhPrivateKey = `-----BEGIN RSA PRIVATE KEY-----
-MIIBPAIBAAJBAM1iZnegECJBt50QpEh9zCEG/jIy6Vp8rkOlyWaNZJFEr6WyvBVf
-ggdhLBIDQmtLIpkRflvlGItXhpWki5JrfuUCAwEAAQJAOSyfYcXJOAAbYTn0wclj
-Pf54XPkXRP1YdbR9MHND/7wji7RdvuOVIkKQTcBSc9U0DCSShdIbDgiMvgr5s+V4
-gQIhAOifIwRcZZAUGVr2ra9BYBErKKAEZ2ZyUq4+fiZx/6WtAiEA4gaBqlGDg76/
-ufpEHb3gZ8qf3VqgFwOVZFfwkmG1tRkCIQCaXdA8+pujKtNQm9XSMQ3xFrTUy1da
-ko7vdiT8mjXN2QIhALPvdBhv7h/aoe1fdAytVVGreFsSw3Gu06Zfb9BI4ww5AiEA
-qwHt7zDE9zU0fXAR+Hu4WOdat2yXP2QftdPIGBHSv7Q=
+MIIBOQIBAAJBAOQ4nnIVHbO9UdmYJqBGrVx0GCGWObkrL4uxazERcM1lFsThopQq
+tMHUzVp4xJHic2gW7BIv8LIOr5kBbOxDNOsCAwEAAQJAPaeSHo3X1Vv7BcbWAIy3
+fveaIVC9TWn+UUXgCISGreXzuVugnIs+BhGMqbJiJDuZksk4zeF/S9TmOqAw2/mD
++QIhAPuTMtgKiqgFaX864mGC7e9C8RMRU+MSoiq/o5u2TwhvAiEA6DxDBvl7zorj
+XR0vwggtceCoWQm7sOQlRxJjMGSqgUUCIEEZmzuaprzKAb3BwBkZp3aVrQqRHlMR
+XFORmcXOjG8TAiAp6dZfB9/kYwSt5XqdFkS9bMJ1b2BEiKiBrzvfnAt50QIgd45c
++PGpOEcBcSa2k7mlEmoVC2cbIfoJnPgwIa8tr4Q=
 -----END RSA PRIVATE KEY-----`
 const ohhWallet = dyCoin.getMyWallet({ address: ohhAddress, privateKey: ohhPrivateKey })
 const qxjWallet = dyCoin.genNewWallet()
