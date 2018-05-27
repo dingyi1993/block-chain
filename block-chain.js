@@ -1,83 +1,124 @@
+const crypto = require('crypto')
 const Block = require('./block')
 const Transaction = require('./transaction')
 
-class BlockChain{
+class BlockChain {
   constructor(difficulty = 2) {
-    this.chain = [this.createGenesisBlock()];
-    this.difficulty = difficulty;
-    this.pendingTransactions = [];
-    this.miningReward = 100;
+    this.chain = [new Block([], "0")]
+    this.difficulty = difficulty
+    this.pendingTransactions = []
+    this.miningReward = 100
   }
 
   createGenesisBlock() {
-    return new Block([], "0");
+    return new Block([], "0")
   }
 
   getLatestBlock() {
-    return this.chain[this.chain.length - 1];
+    return this.chain[this.chain.length - 1]
   }
 
   createTransaction(transaction) {
-    this.pendingTransactions.push(transaction);
+    this.pendingTransactions.push(transaction)
   }
 
   giveCoin(address, amount) {
-    let block = new Block([new Transaction(null, address, amount)]);
-    block.mineBlock(0);
-    this.chain.push(block);
+    let block = new Block([new Transaction(null, address, amount)])
+    block.mineBlock(0)
+    this.chain.push(block)
   }
 
   minePendingTransactions(miningRewardAddress) {
-    let block = new Block(this.pendingTransactions);
-    block.mineBlock(this.difficulty);
-    this.chain.push(block);
+    const validTransactions = this.pendingTransactions.filter(item => {
+      if (BlockChain.isTransactionValid(item)) {
+        item.confirmNum++
+        return true
+      }
+      return false
+    })
+    if (validTransactions.length === 0) {
+      console.log('没有合法的待确认交易，无需挖矿')
+      return
+    }
+    let block = new Block(validTransactions)
+    block.mineBlock(this.difficulty)
+    this.chain.push(block)
     this.pendingTransactions = [
       new Transaction(null, miningRewardAddress, this.miningReward)
-    ];
+    ]
+  }
+
+  static isTransactionValid(transaction) {
+    if (transaction.fromAddress) {
+      try {
+        // console.log('fromAddress', transaction.fromAddress)
+        const decrypt = crypto.publicDecrypt(transaction.fromAddress, transaction.sign)
+        if (decrypt.toString() === BlockChain.keyStr) {
+          return true
+        }
+        return false
+      } catch (error) {
+        console.log('交易不合法')
+        return false
+      }
+    }
+    return true
   }
 
   // addBlock(newBlock) {
-  //   newBlock.previousHash = this.getLatestBlock().hash;
-  //   newBlock.mineBlock(this.difficulty);
-  //   this.chain.push(newBlock);
+  //   newBlock.previousHash = this.getLatestBlock().hash
+  //   newBlock.mineBlock(this.difficulty)
+  //   this.chain.push(newBlock)
   // }
 
   isChainValid() {
     for (let i = 1; i < this.chain.length; i++){
-      const currentBlock = this.chain[i];
-      const previousBlock = this.chain[i - 1];
+      const currentBlock = this.chain[i]
+      const previousBlock = this.chain[i - 1]
 
       if (currentBlock.hash !== currentBlock.calculateHash()) {
-        return false;
+        return false
       }
 
       if (currentBlock.previousHash !== previousBlock.hash) {
-        return false;
+        return false
       }
     }
-    return true;
+    return true
   }
 
-  getBalanceOfAddress(address){
-    let balance = 0; // you start at zero!
+  getBalanceOfAddress(address) {
+    let balance = 0
 
-    // 遍历每个区块以及每个区块内的交易
     for(const block of this.chain){
-      for(const trans of block.transactions){
+      for(const trans of block.transactions) {
 
-        // 如果地址是发起方 -> 减少余额
-        if(trans.fromAddress === address){
-          balance -= trans.amount;
+        if(trans.fromAddress === address) {
+          balance -= trans.amount
         }
 
-        // 如果地址是接收方 -> 增加余额
-        if(trans.toAddress === address){
-          balance += trans.amount;
+        if(trans.toAddress === address) {
+          balance += trans.amount
         }
       }
     }
 
-    return balance;
+    return balance
+  }
+
+  genNewWallet() {
+    const Wallet = require('./wallet')
+    return new Wallet(this)
+  }
+  genFakeWallet({ address, privateKey }) {
+    const Wallet = require('./wallet')
+    return new Wallet(this, address, privateKey, true)
+  }
+  getMyWallet({ address, privateKey }) {
+    const Wallet = require('./wallet')
+    return new Wallet(this, address, privateKey)
   }
 }
+BlockChain.keyStr = '666'
+
 module.exports = BlockChain
